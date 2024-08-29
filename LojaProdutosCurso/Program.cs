@@ -1,6 +1,10 @@
 using LojaProdutosCurso.Data;
+using LojaProdutosCurso.Services.Autenticacao;
 using LojaProdutosCurso.Services.Categoria;
+using LojaProdutosCurso.Services.Estoque;
 using LojaProdutosCurso.Services.Produto;
+using LojaProdutosCurso.Services.Sessao;
+using LojaProdutosCurso.Services.Usuario;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,9 +18,21 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IProdutoInterface, ProdutoService>();
 builder.Services.AddScoped<ICategoriaInterface, CategoriaService>();
+builder.Services.AddScoped<IEstoqueInterface, EstoqueService>();
+builder.Services.AddScoped<IUsuarioInterface, UsuarioService>();
+builder.Services.AddScoped<IAutenticacaoInterface, AutenticacaoService>();
+builder.Services.AddScoped<ISessaoInterface, SessaoService>();
+
+builder.Services.AddAutoMapper(typeof(Program));
+
+builder.Services.AddSession(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
 
 var app = builder.Build();
 
@@ -35,8 +51,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.UseSession();
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Login}/{action=Login}/{id?}");
 
 app.Run();

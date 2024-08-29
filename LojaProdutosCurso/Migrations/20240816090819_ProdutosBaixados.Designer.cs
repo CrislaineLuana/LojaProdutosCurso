@@ -4,6 +4,7 @@ using LojaProdutosCurso.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LojaProdutosCurso.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240816090819_ProdutosBaixados")]
+    partial class ProdutosBaixados
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,48 +67,6 @@ namespace LojaProdutosCurso.Migrations
                             Id = 5,
                             Nome = "Sapatos"
                         });
-                });
-
-            modelBuilder.Entity("LojaProdutosCurso.Models.EnderecoModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Bairro")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CEP")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Complemento")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Logradouro")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Numero")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("UsuarioModelId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UsuarioModelId")
-                        .IsUnique();
-
-                    b.ToTable("Enderecos");
                 });
 
             modelBuilder.Entity("LojaProdutosCurso.Models.ProdutoModel", b =>
@@ -165,55 +126,6 @@ namespace LojaProdutosCurso.Migrations
                     b.ToTable("ProdutosBaixados");
                 });
 
-            modelBuilder.Entity("LojaProdutosCurso.Models.UsuarioModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("Cargo")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("DataAlteracao")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DataCadastro")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<byte[]>("SenhaHash")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<byte[]>("SenhaSalt")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Usuarios");
-                });
-
-            modelBuilder.Entity("LojaProdutosCurso.Models.EnderecoModel", b =>
-                {
-                    b.HasOne("LojaProdutosCurso.Models.UsuarioModel", "Usuario")
-                        .WithOne("Endereco")
-                        .HasForeignKey("LojaProdutosCurso.Models.EnderecoModel", "UsuarioModelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Usuario");
-                });
-
             modelBuilder.Entity("LojaProdutosCurso.Models.ProdutoModel", b =>
                 {
                     b.HasOne("LojaProdutosCurso.Models.CategoriaModel", "Categoria")
@@ -234,12 +146,6 @@ namespace LojaProdutosCurso.Migrations
                         .IsRequired();
 
                     b.Navigation("Produto");
-                });
-
-            modelBuilder.Entity("LojaProdutosCurso.Models.UsuarioModel", b =>
-                {
-                    b.Navigation("Endereco")
-                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

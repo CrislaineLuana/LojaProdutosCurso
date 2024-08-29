@@ -1,10 +1,12 @@
 ﻿using LojaProdutosCurso.Dto.Produto;
+using LojaProdutosCurso.Filtros;
 using LojaProdutosCurso.Services.Categoria;
 using LojaProdutosCurso.Services.Produto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LojaProdutosCurso.Controllers
 {
+    [UsuarioLogado]
     public class ProdutoController : Controller
     {
         private readonly IProdutoInterface _produtoInterface;
@@ -17,7 +19,7 @@ namespace LojaProdutosCurso.Controllers
             _categoriaInterface = categoriaInterface;
         }
 
-
+        [UsuarioLogadoAdm]
         public async Task<IActionResult> Index()
         {
 
@@ -26,6 +28,7 @@ namespace LojaProdutosCurso.Controllers
             return View(produtos);
         }
 
+        [UsuarioLogadoAdm]  
         public async Task<IActionResult> Cadastrar()
         {
 
@@ -34,12 +37,21 @@ namespace LojaProdutosCurso.Controllers
             return View();
         }
 
+        [UsuarioLogadoAdm]  
         public async Task<IActionResult> Remover(int id)
         {
             var produto = await _produtoInterface.Remover(id);
             return RedirectToAction("Index", "Produto");
         }
 
+
+        public async Task<IActionResult> Detalhes(int id)
+        {
+            var produto = await _produtoInterface.BuscarProdutoPorId(id); 
+            return View(produto);
+        }
+
+        [UsuarioLogadoAdm]  
         public async Task<IActionResult> Editar(int id)
         {
             var produto = await _produtoInterface.BuscarProdutoPorId(id);
@@ -62,6 +74,7 @@ namespace LojaProdutosCurso.Controllers
 
 
         [HttpPost]
+        [UsuarioLogadoAdm]
         public async Task<IActionResult> Cadastrar(CriarProdutoDto criarProdutoDto, IFormFile foto)
         {
             if (ModelState.IsValid) {
@@ -82,6 +95,7 @@ namespace LojaProdutosCurso.Controllers
         }
 
         [HttpPost]
+        [UsuarioLogadoAdm]
         public async Task<IActionResult> Editar(EditarProdutoDto editarProdutoDto, IFormFile? foto)
         {
             if (ModelState.IsValid) 
